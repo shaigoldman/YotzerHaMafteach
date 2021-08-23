@@ -1,7 +1,7 @@
 # YotzerHaMafteach
 A "Mafteach" (Hebrew for "index") creator tool for talmudic notes and articles.
 
-To use, first convert the notes into a .txt file, as in the example files. Then use the path to generate an automated mafteach using the python script "YotzerHaMafteach.py" like so:
+To use, first convert the notes into a .txt file, as in the example files. Then use the path to generate an automated mafteach using the python script "YotzerHamafteach.py" like so:
 
         YotzerHamafteach.py NOTES_NAME.txt OUTPUT_NAME.txt
 

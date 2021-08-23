@@ -1,7 +1,9 @@
 import argparse
+import sys
 import numpy as np
 import pandas as pd
 # my stuff
+sys.path.append('src/')
 import LoadTxt
 import SourceParsers as sp
 import SeferSort as ss
