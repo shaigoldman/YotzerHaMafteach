@@ -1,4 +1,9 @@
 def add_alt_chkchk(str_list):
+    """ I want to allow for the two methods of using the
+        hebrew 'chuck-chuck' character: " and ״. So lets
+        add to our sefer names a copy of every name with
+        each kind of chuck.
+    """
     old_list = str_list.copy()
     insertions = 0
     for index, word in enumerate(old_list):

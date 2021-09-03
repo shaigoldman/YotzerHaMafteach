@@ -1,12 +1,12 @@
 """Hebrew Letter-Based Numering Identifiers and Quantifiers"""
 
 def remove_chucks(hebrew_word) -> str:
-    """ Hebrew numbering systems use 'chuck-chucks' in between
-        letters that are meant as numerics rather than words. 
-        To make it easier to interpret their numeric value
-        We may often want to remove the chuck entirely since
-        they do not contribute to the numeric value. This does
-        that.
+    """ Hebrew numbering systems use 'chuck-chucks' (aka quotation
+        marks that aren't being used to signify a quotation) 
+        in between letters that are meant as numerics rather 
+        than words. To make it easier to interpret their numeric 
+        value we may often want to remove the chuck to better read 
+        the value of the actual letters. This function does that.
     """
     for chuck in ['״', '׳', '"', "'"]:
         while chuck in hebrew_word:
@@ -27,12 +27,22 @@ def chuck_with(word, prefix) -> str:
 
 
 def has_chuck(word) -> bool:
+    """ Returns True if there is a chuck-chuck in the
+        word str. A function is neccesary because different
+        ascii characters can represent chuck-chucks in hebrew.
+    """
     return ("'" in word
             or '"' in word
             or '״' in word)
 
 
 def can_be_prefix(letter, place) -> bool:
+    """ In hebrew writing, some letters can serve as
+        word prefixes, and should be discounted when
+        considering the numeric value of the whole word.
+        This returns True if the letter in the given
+        position of the str can be a prefix.
+    """
     first_only = 'בכמלו'
     can_be_seconds = 'השד'
     if place <=2 and letter in can_be_seconds:
@@ -44,6 +54,26 @@ def can_be_prefix(letter, place) -> bool:
 
 def is_numeric(hebrew_word, allow_prefix=False, fifty_cap=False,
                allow_hundreds=True) -> bool:
+    """ Determines if a hebrew word may actually be not a word at
+        all, but just a numeric placeholder.
+        
+        Args:
+            hebrew_word (str): the word in question.
+            allow_prefix (bool): if True, will ignore certain
+                 letters at the start of the word if they can
+                 be assumed as grammatical prefixes.
+            fifty_cap (bool): if True, if the word can only form
+                 a number over fifty, it will be considered
+                 non-numeric.
+            allow_hundreds (bool): since it is rare to have values
+                 over 100 represented by hebrew letters, pass false
+                 to return True if the only possible numeric values
+                 are above 100.
+
+        Returns:
+            True if it is possible for this word to be a number,
+            False otherwise.
+    """
     ones = 'אבגדהוזחט'
     tens = 'יכלמנסעפצ'
     hundreds = 'קרשת'
