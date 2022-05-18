@@ -98,7 +98,7 @@ def build_mafteach(text):
                                     'text': [text], 'type': [label],
                                     'sefer': [sefer_name],
                                     'section': [s],
-                                    'klal': [this_klal], 'siman': [this_siman],
+                                    'klal': [this_klal.replace('כלל ','')], 'siman': [this_siman],
                                     'sif': [this_sif],
                                     'where': [w]})
                         mekorot.append(mekor)
