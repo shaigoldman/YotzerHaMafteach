@@ -8,7 +8,7 @@ import LoadTxt
 import SourceParsers as sp
 import SeferSort as ss
 import SeferNames
-from SectionNames import klalim, simanim, sifim
+from SectionNames import super_sections, klalim, simanim, sifim
 
 def build_mafteach(text):
     """ Builds a Mafteach based on the given hebrew text.
@@ -22,13 +22,21 @@ def build_mafteach(text):
             kind of mafteach.
     """
     #------Variables for the tracking
+    this_ss = None
     this_klal = None
     this_siman = None
     this_sif = None
     mekorot = []
     #-------Find the mekorot
     for line in text:
+        if len(line) > sp.MEKOR_STR_MAXLEN + 20:
+            continue
+
         #------Check if it is a new klal, siman or sif
+        for super_s in super_sections:
+            if super_s in line:
+                this_ss = super_s.split(' ')[1]
+
         for klal in klalim:
             if klal in line:
                 if (len(line) <= line.index(klal)+len(klal)
@@ -45,8 +53,10 @@ def build_mafteach(text):
             if sif in line and len(line)<50:
                 this_sif = sif[:-1] # take off the period
 
+	
         if len(line) > sp.MEKOR_STR_MAXLEN:
             continue
+
         #------Check if there is a mekor here
         for label, sefer_names in SeferNames.all_sfarim.items():
             # ^ "sefer_names" is not a super accurate variable descript
@@ -98,6 +108,7 @@ def build_mafteach(text):
                                     'text': [text], 'type': [label],
                                     'sefer': [sefer_name],
                                     'section': [s],
+                                    'super_section': [this_ss],
                                     'klal': [this_klal.replace('כלל ','')], 'siman': [this_siman],
                                     'sif': [this_sif],
                                     'where': [w]})
@@ -115,10 +126,10 @@ def build_mafteach(text):
         keys.append(ss.sort_section(key, typ))
 
     for key_num, key in enumerate(keys):
-        keys[key_num] = key[['sif', 'siman', 'klal', 'sefer', 'where', 'section', 'type']]
+        keys[key_num] = key[['sif', 'siman', 'klal', 'super_section', 'sefer', 'where', 'section', 'type']]
         # blank repeated refrences
         for rownum, (index, row) in enumerate(keys[key_num].iterrows()):
-            row = row[['klal', 'siman', 'sif', 'sefer', 'where', 'section']]
+            row = row[['super_section', 'klal', 'siman', 'sif', 'sefer', 'where', 'section']]
             for label, item in row.iteritems():
                 go_backs = 1
                 while rownum-go_backs>0 and keys[key_num].iloc[rownum-go_backs][label] == '':
@@ -129,6 +140,9 @@ def build_mafteach(text):
                     and item != '-'):
                     # dont blank repeat siman/sif unless
                     # its a repeat klal etc
+                    if label == 'klal':
+                        if not keys[key_num].loc[index, 'super_section'] == '':
+                            continue
                     if label == 'siman' or label == 'sif':
                         if not keys[key_num].loc[index, 'klal'] == '':
                             continue

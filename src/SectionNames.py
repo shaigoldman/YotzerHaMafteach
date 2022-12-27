@@ -4,6 +4,8 @@
 """
 import numpy as np
 
+super_sections = [f'סופרחלק {א}' for א in 'אבגדה']
+
 klalim = [f'כלל {כ}' for כ in 'אבגדהוזחטי']
 klalim.extend([f'כלל י{כ}' for כ in 'אבגד'])
 klalim.extend([f'כלל ט{כ}' for כ in 'וז'])
